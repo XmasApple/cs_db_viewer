@@ -1,0 +1,48 @@
+﻿<Window x:Class="lab.ConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:lab"
+        mc:Ignorable="d"
+        Title="ConnectionDialog" 
+        Height="200" Width="500"
+        MinHeight="160" MinWidth="300"
+        MaxHeight="300" MaxWidth="500"
+        SizeToContent="Height"
+        >
+    <Grid>
+        <!-- 
+        4 fields:
+        1. IP address (and port)
+        2. Database name
+        3. User name
+        4. Password
+        5. Connect button
+         -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Database address" Grid.Column="0" Grid.Row="0"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Name="DatabaseAddressTextBox"/>
+        <!-- <Label Content="Port" Grid.Column="0" Grid.Row="1"></Label> -->
+        <!-- <TextBox Grid.Column="1" Grid.Row="1" Name="DatabasePortTextBox"/> -->
+        <Label Content="Database name" Grid.Column="0" Grid.Row="2"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Name="DatabaseNameTextBox"/>
+        <Label Content="User name" Grid.Column="0" Grid.Row="3"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Name="UserNameTextBox"/>
+        <Label Content="Password" Grid.Column="0" Grid.Row="4"/>
+        <PasswordBox Grid.Column="1" Grid.Row="4" Name="PasswordTextBox"/>
+        
+        <Button Content="Connect" Grid.Column="1" Grid.Row="5" Click="ConnectButton_Click"/>
+    </Grid>
+</Window>
