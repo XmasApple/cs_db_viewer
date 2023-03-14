@@ -1,11 +1,7 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace lab
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -17,14 +13,23 @@ namespace lab
         {
             var connectionDialog = new ConnectionDialog();
             connectionDialog.ShowDialog();
+            if (DatabaseManager.Instance.Connection == null) return;
+            UpdateButton.IsEnabled = true;
         }
 
         private void DisconnectDB_OnClick(object sender, RoutedEventArgs e)
         {
-            DatabaseManager.Connection?.Close();
-            DatabaseManager.Connection = null;
+            DatabaseManager.Instance.DeleteConnection();
+            UpdateButton.IsEnabled = false;
 
             MessageBox.Show("Disconnected from database");
+        }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dataTable = DatabaseManager.Instance.GetTable("product");
+
+            DataGrid.ItemsSource = dataTable?.DefaultView;
         }
     }
 }

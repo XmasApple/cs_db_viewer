@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-// mysql connector
 using System.Data.SqlClient;
 using System.Windows.Controls;
 
@@ -8,6 +7,7 @@ namespace lab;
 
 public partial class ConnectionDialog : Window
 {
+
     public ConnectionDialog()
     {
         InitializeComponent();
@@ -15,29 +15,13 @@ public partial class ConnectionDialog : Window
 
     private void ConnectButton_Click(object sender, RoutedEventArgs e)
     {
-        var databaseAddress = (TextBox)FindName("DatabaseAddressTextBox")!;
-        var databaseName = (TextBox)FindName("DatabaseNameTextBox")!;
-        var username = (TextBox)FindName("UserNameTextBox")!;
-        var password = (PasswordBox)FindName("PasswordTextBox")!;
+        var connectionString =
+            $"Server={DatabaseAddressTextBox.Text};" +
+            $"Database={DatabaseNameTextBox.Text};" +
+            $"User ID={UserNameTextBox.Text};" +
+            $"Password={PasswordTextBox.Password}";
 
-        var connectionString = 
-            $"Server={databaseAddress.Text};" +
-            $"Database={databaseName.Text};" +
-            $"User ID={username.Text};" +
-            $"Password={password.Password}";
-        
-        var connection = new SqlConnection(connectionString);
-        try
-        {
-            connection.Open();
-            MessageBox.Show("Connection successful!");
-            DatabaseManager.Connection = connection;
-            Close();
-
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show($"Big Problem: {exception}");
-        }
+        DatabaseManager.Instance.CreateConnection(connectionString);
+        Close();
     }
 }
