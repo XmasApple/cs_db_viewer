@@ -7,12 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!-- menu bar with "Connect DB" section -->
         <Menu Grid.Row="0" DockPanel.Dock="Top">
             <MenuItem Header="Connect DB" Margin="5">
                 <MenuItem Header="Connect" Click="ConnectDB_OnClick" />
@@ -25,20 +23,39 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Button
-                Content="Update"
-                Grid.Column="0"
-                Padding="10"
-                Margin="10"
-                Height="50"
-                VerticalAlignment="Top"
-                IsEnabled="False"
-                Click="UpdateButton_Click"
-                Name="UpdateButton"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button
+                    Content="Update"
+                    Grid.Row="0"
+                    Padding="10"
+                    Margin="10"
+                    Height="50"
+                    VerticalAlignment="Top"
+                    IsEnabled="False"
+                    Click="UpdateButton_Click"
+                    Name="UpdateButton" />
+                <Button
+                    Content="Insert"
+                    Grid.Row="1"
+                    Padding="10"
+                    Margin="10"
+                    Height="50"
+                    VerticalAlignment="Top"
+                    IsEnabled="False"
+                    Click="InsertButton_Click"
+                    Name="InsertButton" />
+            </Grid>
 
-            <DataGrid Grid.Column="1" Margin="10" Name="DataGrid"></DataGrid>
+            <DataGrid 
+                Grid.Column="1"
+                Margin="10"
+                Name="DataGrid" />
         </Grid>
     </Grid>
 </Window>
