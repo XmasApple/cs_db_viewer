@@ -15,7 +15,6 @@ public partial class InsertDialog : Window
     {
         DatabaseManager.Instance.InsertValue(
             "product", new List<string> { "Name", "Category" },
-            new List<SqlDbType> { SqlDbType.VarChar, SqlDbType.VarChar },
             new List<string> { NameTextBox.Text, CategoryTextBox.Text }
         );
         Close();

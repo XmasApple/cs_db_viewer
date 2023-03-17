@@ -54,7 +54,7 @@
 
             <DataGrid 
                 Grid.Column="1"
-                Margin="10"
+                BeginningEdit="DataGrid_OnBeginningEdit"
                 Name="DataGrid" />
         </Grid>
     </Grid>

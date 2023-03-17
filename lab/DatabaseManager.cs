@@ -9,127 +9,135 @@ namespace lab;
 
 public class DatabaseManager
 {
-    public SqlConnection? Connection
-    {
-        get => _connection;
-    }
-
-    private SqlConnection? _connection;
+    public SqlConnection? Connection { get; private set; }
 
     private static DatabaseManager? _instance;
 
-    public static DatabaseManager Instance
-    {
-        get { return _instance ??= new DatabaseManager(); }
-    }
+    public static DatabaseManager Instance => _instance ??= new DatabaseManager();
 
-    public bool CreateConnection(string connectionString)
+    private static T TryExecute<T>(Func<T> method, T errorReturn)
     {
         try
         {
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
-            _connection.Close();
-            return true;
+            return method();
         }
         catch (Exception exception)
         {
-            MessageBox.Show($"Big Problem: {exception}");
-            return false;
+            MessageBox.Show($"Big Problem:\n{exception}");
+            return errorReturn;
         }
     }
 
-    public void DeleteConnection()
-    {
-        _connection = null;
-    }
-
-    public bool OpenConnection()
-    {
-        try
+    public bool CreateConnection(string connectionString) => TryExecute(() =>
         {
-            if (_connection is { State: ConnectionState.Closed }) _connection.Open();
+            Connection = new SqlConnection(connectionString);
+            Connection.Open();
+            Connection.Close();
+            return true;
+        },
+        false);
+
+    public void DeleteConnection() => Connection = null;
+
+    public bool OpenConnection() => TryExecute(() =>
+        {
+            if (Connection is { State: ConnectionState.Closed }) Connection.Open();
 
             return true;
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show($"Big Problem: {exception}");
-            return false;
-        }
-    }
+        },
+        false);
 
-    public bool CloseConnection()
-    {
-        try
+
+    public bool CloseConnection() => TryExecute(() =>
         {
-            if (_connection is { State: ConnectionState.Open }) _connection.Close();
+            if (Connection is { State: ConnectionState.Open }) Connection.Close();
 
             return true;
-        }
-        catch (Exception exception)
+        },
+        false);
+
+    public DataTable? GetTable(string tableName) =>
+        TryExecute(() =>
+            {
+                var commandText = $"SELECT * FROM {tableName}";
+
+                var command = new SqlCommand(commandText, Connection);
+
+                var dateTable = new DataTable();
+                OpenConnection();
+                dateTable.Load(command.ExecuteReader());
+                CloseConnection();
+                return dateTable;
+            },
+            null);
+
+    public bool InsertValue(string tableName, List<string> cols, List<string> values) =>
+        TryExecute(() =>
+            {
+                values = values.Select(val => $"'{val}'").ToList();
+                var commandText =
+                    $"INSERT INTO {tableName} " +
+                    $"({string.Join(", ", cols)}) " +
+                    $"VALUES ({string.Join(", ", values)});";
+
+
+                using var insertCommand = Connection?.CreateCommand();
+                if (insertCommand == null) throw new NullReferenceException();
+                insertCommand.CommandText = commandText;
+
+                insertCommand.Connection.Open();
+                insertCommand.ExecuteNonQuery();
+                insertCommand.Connection.Close();
+                return true;
+            },
+            false);
+
+    public bool DeleteRow(string tableName, List<string> cols, List<string> values) => TryExecute(
+        () =>
         {
-            MessageBox.Show($"Big Problem: {exception}");
-            return false;
-        }
-    }
-
-    public DataTable? GetTable(string tableName)
-    {
-        try
-        {
-            var commandText = $"SELECT * FROM {tableName}";
-
-            var command = new SqlCommand(commandText, Connection);
-
-            var dateTable = new DataTable();
-            OpenConnection();
-            dateTable.Load(command.ExecuteReader());
-            CloseConnection();
-            return dateTable;
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show($"Big Problem: {exception}");
-            return null;
-        }
-    }
-
-    public bool InsertValue(string tableName, List<string> cols, List<SqlDbType> types, List<string> values)
-    {
-        try
-        {
-            var valuesParamStrings = string.Join(
-                ", ",
-                cols.Select(col => $"'@{col}'"));
-            values = values.Select(val => $"'{val}'").ToList();
-            var commandText =
-                $"INSERT INTO {tableName} " +
-                $"({string.Join(", ", cols)}) " +
-                $"VALUES ({string.Join(", ", values)});";
-                // $"VALUES ({valuesParamStrings});";
-            
-
             using var insertCommand = Connection?.CreateCommand();
             if (insertCommand == null) throw new NullReferenceException();
-            insertCommand.CommandText = commandText;
-            // foreach (var (col, type, value) in cols.Zip(types, values))
-            // {
-            //     var parametr = new SqlParameter($"@{col}", value);
-            //     insertCommand.Parameters.Add(parametr);
-            //     // insertCommand.Parameters.Add($"@{col}", type).Value = value;
-            // }
-            MessageBox.Show(commandText);
-            
+
+            var compareString = string.Join(
+                " AND ",
+                cols.Zip(values, (col, val) => $"{col} = '{val}'"));
+
+            insertCommand.CommandText = $"DELETE FROM {tableName} WHERE {compareString}";
+
             insertCommand.Connection.Open();
             insertCommand.ExecuteNonQuery();
             insertCommand.Connection.Close();
             return true;
-        }
-        catch (Exception exception)
+        },
+        false
+    );
+
+    public bool UpdateRow(string tableName, List<string> cols, List<string> oldValues, List<string> setCols,
+        List<string> newValues) => TryExecute(() =>
         {
-            MessageBox.Show($"Big Problem: {exception}");
-            return false;
-        }
-    }
+            using var insertCommand = Connection?.CreateCommand();
+            if (insertCommand == null) throw new NullReferenceException();
+
+            var compareString = string.Join(
+                " AND ",
+                cols.Zip(oldValues, (col, val) => $"{col} = '{val}'"));
+
+            var setStrings = new List<string>();
+            foreach (var (col, value) in setCols
+                         .Zip(newValues)
+                         .Where(pair => pair.Second != ""))
+                setStrings.Add($"{col} = '{value}'");
+
+            insertCommand.CommandText =
+                $"UPDATE {tableName} " +
+                $"SET {string.Join(", ", setStrings)} " +
+                $"WHERE {compareString}";
+
+            insertCommand.Connection.Open();
+            insertCommand.ExecuteNonQuery();
+            insertCommand.Connection.Close();
+
+            return true;
+        },
+        false);
 }

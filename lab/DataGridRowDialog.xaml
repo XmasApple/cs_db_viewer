@@ -1,0 +1,51 @@
+﻿<Window x:Class="lab.DataGridRowDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:lab"
+        mc:Ignorable="d"
+        Title="DataGridRowDialog"
+        Height="200" Width="500"
+        MinHeight="160" MinWidth="300"
+        MaxHeight="300" MaxWidth="500"
+        SizeToContent="Height">
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="DefaultStyle">
+                <Setter Property="Control.Margin" Value="5" />
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}"/>
+            <Style TargetType="TextBox" BasedOn="{StaticResource DefaultStyle}"/>
+            <Style TargetType="Button" BasedOn="{StaticResource DefaultStyle}"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+        
+            <Label Grid.Column="0" Grid.Row="0" Content="Name"/>
+            <TextBox Grid.Column="1" Grid.Row="0" Name="NameTextBox"/>
+            <Label Grid.Column="0" Grid.Row="1" Content="Category" />
+            <TextBox Grid.Column="1" Grid.Row="1" Name="CategoryTextBox"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Delete" Name="DeleteButton" Click="DeleteButton_OnClick"/>
+            <Button Grid.Column="1" Content="Update" Name="UpdateButton" Click="UpdateButton_OnClick"/>
+        </Grid>
+    </Grid>
+</Window>

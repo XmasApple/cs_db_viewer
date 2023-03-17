@@ -12,6 +12,15 @@
         SizeToContent="Height"
         >
     <Grid>
+        <Grid.Resources>
+            <Style x:Key="DefaultStyle">
+                <Setter Property="Control.Margin" Value="5" />
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}"/>
+            <Style TargetType="TextBox" BasedOn="{StaticResource DefaultStyle}"/>
+            <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultStyle}"/>
+            <Style TargetType="Button" BasedOn="{StaticResource DefaultStyle}"/>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
