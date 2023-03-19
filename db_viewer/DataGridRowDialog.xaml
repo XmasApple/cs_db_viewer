@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="DataGridRowDialog"
         Height="200" Width="500"
-        MinHeight="160" MinWidth="300"
+        MinHeight="140" MinWidth="300"
         MaxHeight="300" MaxWidth="500"
         SizeToContent="Height">
     <Grid>

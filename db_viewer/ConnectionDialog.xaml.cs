@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Data.SqlClient;
-using System.Windows.Controls;
+﻿using System.Windows;
 
 namespace lab;
 

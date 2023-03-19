@@ -16,6 +16,10 @@
                 <MenuItem Header="Connect" Click="ConnectDB_OnClick" />
                 <MenuItem Header="Disconnect" Click="DisconnectDB_OnClick" />
             </MenuItem>
+            <MenuItem Header="Export" Margin="5">
+                <MenuItem Header="Export PDF" Click="ExportPDF_OnClick" />
+                <MenuItem Header="Export docX" Click="ExportDOCX_OnClick" />
+            </MenuItem>
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
