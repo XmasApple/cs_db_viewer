@@ -132,6 +132,8 @@ public class DatabaseManager
                 $"UPDATE {tableName} " +
                 $"SET {string.Join(", ", setStrings)} " +
                 $"WHERE {compareString}";
+            
+            MessageBox.Show(insertCommand.CommandText);
 
             insertCommand.Connection.Open();
             insertCommand.ExecuteNonQuery();

@@ -1,6 +1,9 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 namespace lab
@@ -12,7 +15,7 @@ namespace lab
             InitializeComponent();
         }
 
-        private const string TableName = "product";
+        private string TableName => TableNameTextBox.Text;
 
         private void ConnectDB_OnClick(object sender, RoutedEventArgs e)
         {
@@ -36,6 +39,7 @@ namespace lab
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
+            if (TableName == "") return;
             var dataTable = DatabaseManager.Instance.GetTable(TableName);
 
             DataGrid.ItemsSource = dataTable?.DefaultView;
@@ -43,19 +47,24 @@ namespace lab
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
         {
-            var insertDialog = new InsertDialog();
+            var insertDialog = new InsertDialog(DataGrid, TableName);
             insertDialog.ShowDialog();
             UpdateButton_Click(null!, null!);
         }
 
         private void DataGrid_OnBeginningEdit(object? sender, DataGridBeginningEditEventArgs e)
         {
+            if (e.Row.Item is not DataRowView row) return;
+
+            if (row.Row.Table.Columns.Contains("Image") && row.Row["Image"] is string url)
+                Image.Source = new BitmapImage(new Uri(url));
+
             var dataGridRowDialog = new DataGridRowDialog(
                 DataGrid,
-                e.Row.Item as DataRowView,
+                row,
                 TableName);
             dataGridRowDialog.ShowDialog();
-            
+
             UpdateButton_Click(null!, null!);
         }
 
@@ -70,7 +79,7 @@ namespace lab
             };
             return dlg.ShowDialog() == true ? dlg.FileName : "";
         }
-        
+
         private void ExportPDF_OnClick(object sender, RoutedEventArgs e)
         {
             var savePath = GetSavePath("Select PDF file", "PDF(*.pdf)|*.pdf", "pdf");
@@ -83,7 +92,16 @@ namespace lab
 
         private void ExportDOCX_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
+
+        // private void DataGrid_OnMouseDown(object sender, MouseButtonEventArgs e)
+        // {
+        //     MessageBox.Show("DataGrid_OnMouseDown");
+        //     var rowView = (DataRowView)DataGrid.SelectedItem;
+        //     // check if has "Image" column
+        //     if (rowView.Row.Table.Columns.Contains("Image") && rowView.Row["Image"] is string url)
+        //         Image.Source = new BitmapImage(new Uri(url));
+        // }
     }
 }

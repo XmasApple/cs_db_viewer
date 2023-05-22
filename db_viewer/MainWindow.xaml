@@ -33,10 +33,26 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Content="Table Name"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+                <TextBox
+                    Grid.Row="1"
+                    Name="TableNameTextBox"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="100" />
                 <Button
                     Content="Update"
-                    Grid.Row="0"
+                    Grid.Row="2"
                     Padding="10"
                     Margin="10"
                     Height="50"
@@ -46,7 +62,7 @@
                     Name="UpdateButton" />
                 <Button
                     Content="Insert"
-                    Grid.Row="1"
+                    Grid.Row="3"
                     Padding="10"
                     Margin="10"
                     Height="50"
@@ -54,9 +70,17 @@
                     IsEnabled="False"
                     Click="InsertButton_Click"
                     Name="InsertButton" />
+
+                <Image
+                    Grid.Row="4"
+                    Width="100"
+                    Height="100"
+                    Name="Image">
+                </Image>
+
             </Grid>
 
-            <DataGrid 
+            <DataGrid
                 Grid.Column="1"
                 BeginningEdit="DataGrid_OnBeginningEdit"
                 Name="DataGrid" />
